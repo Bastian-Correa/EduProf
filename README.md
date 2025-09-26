@@ -81,7 +81,6 @@ flowchart TD
   ProfesorDetalle["ProfesorDetalle"]
   BarraNav["BarraNavegación"]
   Malla["Malla (Fullscreen)"]
-  Buscar["Buscar (Futuro)"]
   Favoritos["Favoritos (Futuro)"]
   FuenteDeDatos["Fuente de Datos"]
 
@@ -89,7 +88,6 @@ flowchart TD
   Home --> Semestres
   Home --> Profesores
   Home --> Buscar
-  Home --> Favoritos
   Home --> Malla
 
   Semestres --> SemestreDetalle
