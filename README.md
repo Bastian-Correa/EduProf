@@ -81,7 +81,6 @@ flowchart TD
   ProfesorDetalle["ProfesorDetalle"]
   BarraNav["BarraNavegación"]
   Malla["Malla (Fullscreen)"]
-  Favoritos["Favoritos (Futuro)"]
   FuenteDeDatos["Fuente de Datos"]
 
   %% Transiciones lógicas
