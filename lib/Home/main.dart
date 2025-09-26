@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../Semestre/principal_semestres.dart';
 import '../Profesores/principal_profesores.dart';
+import 'package:EduProf/Botones_Barra/Botones_barra_baja.dart';
 
 void main() => runApp(const MyApp());
 
@@ -28,23 +29,17 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F4FF), // Fondo de la app
+      backgroundColor: const Color(0xFFF0F4FF),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(
-          255,
-          163,
-          31,
-          31,
-        ), // Color del AppBar
+        backgroundColor: const Color.fromARGB(255, 163, 31, 31),
         title: Text(
           title,
           style: const TextStyle(
-            fontSize: 26, // tamaño de fuente
-            fontWeight: FontWeight.bold, // negrita
-            color: Colors.white, // color del texto
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
-        //centerTitle: true, // centra el título
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -52,7 +47,7 @@ class MyHomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Header "Bienvenido a EduProf"
+              // Header
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -67,12 +62,12 @@ class MyHomePage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Dos cards botón: Semestres / Profesores
+              // Botones Semestres / Profesores
               Row(
                 children: [
                   Expanded(
                     child: ImageTextButtonCard(
-                      imagePath: 'assets/Aji.png',
+                      imagePath: 'assets/Semestre.png',
                       label: 'Semestres',
                       onTap: () {
                         Navigator.push(
@@ -87,7 +82,7 @@ class MyHomePage extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ImageTextButtonCard(
-                      imagePath: 'assets/Pizza.png',
+                      imagePath: 'assets/Profesor.jpg',
                       label: 'Profesores',
                       onTap: () {
                         Navigator.push(
@@ -103,23 +98,46 @@ class MyHomePage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Imagen grande "Plan de clases" (solo visual por ahora)
+              // Malla con botón de expandir
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Image.asset('assets/Sandia.png', fit: BoxFit.cover),
+                child: Stack(
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 13 / 9,
+                      child: Image.asset('assets/Malla.png', fit: BoxFit.cover),
+                    ),
+                    Positioned(
+                      right: 8,
+                      bottom: 8,
+                      child: IconButton.filled(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.black.withOpacity(0.45),
+                        ),
+                        icon: const Icon(Icons.fullscreen, color: Colors.white),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const MallaFullScreen(),
+                            ),
+                          );
+                        },
+                        tooltip: 'Ver malla completa',
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: const AppBottomNav(currentIndex: 0),
     );
   }
 }
 
-/// Card reutilizable (imagen arriba + texto abajo, todo es botón)
 class ImageTextButtonCard extends StatelessWidget {
   final String imagePath;
   final String label;
@@ -150,7 +168,7 @@ class ImageTextButtonCard extends StatelessWidget {
               ),
               child: Image.asset(
                 imagePath,
-                height: 140,
+                height: 190,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
@@ -166,6 +184,34 @@ class ImageTextButtonCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class MallaFullScreen extends StatelessWidget {
+  const MallaFullScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          'Malla Curricular',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      body: InteractiveViewer(
+        panEnabled: true,
+        boundaryMargin: const EdgeInsets.all(80),
+        minScale: 1.0,
+        maxScale: 4.0,
+        child: Center(
+          child: Image.asset('assets/Malla.png', fit: BoxFit.contain),
         ),
       ),
     );
