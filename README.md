@@ -63,3 +63,42 @@ Su objetivo principal es organizar la información académica de manera clara y 
 
 ## Video de presentación
 https://youtu.be/3h7XuvXUp2Q
+
+flowchart TD
+  %% Pantallas principales de EduProf
+  Home["Home"]
+  Semestres["Semestres"]
+  SemestreDetalle["SemestreDetalle"]
+  RamoDetalle["RamoDetalle"]
+  Profesores["Profesores"]
+  ProfesorDetalle["ProfesorDetalle"]
+  BarraNav["BarraNavegación"]
+  Malla["Malla (Fullscreen)"]
+  Buscar["Buscar (Futuro)"]
+  Favoritos["Favoritos (Futuro)"]
+  FuenteDeDatos["Fuente de Datos"]
+
+  %% Transiciones lógicas
+  Home --> Semestres
+  Home --> Profesores
+  Home --> Buscar
+  Home --> Favoritos
+  Home --> Malla
+
+  Semestres --> SemestreDetalle
+  SemestreDetalle --> RamoDetalle
+  RamoDetalle --> ProfesorDetalle
+
+  Profesores --> ProfesorDetalle
+
+  %% Barra de navegación siempre lleva a Home
+  BarraNav -- "Vuelve a -->" --> Home
+
+  %% Conexiones a fuente de datos (opcional, para clarificar relación)
+  Semestres -.-> FuenteDeDatos
+  Profesores -.-> FuenteDeDatos
+  SemestreDetalle -.-> FuenteDeDatos
+  RamoDetalle -.-> FuenteDeDatos
+  ProfesorDetalle -.-> FuenteDeDatos
+
+  **Fuente de Datos:** archivo academico.dart que centraliza la información de ramos y profesores, utilizando las estructuras definidas en profesor.dart y ramo.dart para su organización (Para que se entienda mejor a donde esta la base de datos)
