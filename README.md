@@ -63,33 +63,3 @@ Su objetivo principal es organizar la información académica de manera clara y 
 
 ## Video de presentación
 https://youtu.be/3h7XuvXUp2Q
-
-
-
-flowchart TD
-  L([App Start]) --> H[Home / Dashboard]
-
-  %% Acciones disponibles en Home
-  H -->|tap "Semestres"| SEM[Semestres]
-  H -->|tap "Profesores"| PROFS[Profesores]
-  H -->|tap icono "expandir malla"| MALLA[Malla Full Screen]
-  H -->|tab "Buscar"| SEARCH[Buscar (placeholder)]
-  H -->|tab "Favoritos"| FAV[Favoritos (placeholder)]
-
-  %% Flujo Semestres -> Ramo -> Profesor
-  SEM -->|select "Sem N"| SDET[Semestre Detalle]
-  SDET -->|tap "Ramo"| RDET[Ramo Detalle]
-  RDET -->|tap "Profesor asignado"| PDET[Profesor Detalle]
-
-  %% Flujo Profesores -> Detalle
-  PROFS -->|tap tarjeta| PDET2[Profesor Detalle]
-
-  %% Regresos (back)
-  PDET --> RDET
-  RDET --> SDET
-  SDET --> SEM
-  SEM -. back .-> H
-  PROFS -. back .-> H
-  MALLA -. back .-> H
-  SEARCH -. tab back .-> H
-  FAV -. tab back .-> H
