@@ -64,9 +64,11 @@ Su objetivo principal es organizar la información académica de manera clara y 
 ## Video de presentación
 https://youtu.be/3h7XuvXUp2Q
 
- **Fuente de Datos:** archivo academico.dart que centraliza la información de ramos y profesores, utilizando las estructuras definidas en profesor.dart y ramo.dart para su organización (Para que se entienda mejor a donde esta la base de datos)
+
 
 ## Diagrama de Navegación (State Diagram)
+
+ **Fuente de Datos:** archivo academico.dart que centraliza la información de ramos y profesores, utilizando las estructuras definidas en profesor.dart y ramo.dart para su organización (Para que se entienda mejor a donde esta la base de datos)
 
 ```mermaid
 flowchart TD
@@ -105,6 +107,8 @@ flowchart TD
   SemestreDetalle -.-> FuenteDeDatos
   RamoDetalle -.-> FuenteDeDatos
   ProfesorDetalle -.-> FuenteDeDatos
+
+
 
 
  
