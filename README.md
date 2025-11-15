@@ -1,75 +1,120 @@
+# 📘 EduProf — Prototipo Funcional Móvil
 
-# EduProf
+**EduProf** es una aplicación móvil desarrollada en **Flutter** cuyo propósito es apoyar a los estudiantes de la carrera de *Ingeniería en Desarrollo de Videojuegos y Realidad Virtual* en la consulta rápida y organizada de información académica: semestres, ramos, profesores y malla curricular.
 
--Es una aplicación diseñada como herramienta de apoyo para los estudiantes de la carrera de Ingeniería en Desarrollo de Videojuegos y Realidad Virtual.
-Su objetivo principal es organizar la información académica de manera clara y accesible, permitiendo consultar semestres, profesores y la malla curricular de forma centralizada.
+Incluye funcionalidades avanzadas como búsqueda, sistema de favoritos, personalización visual y un módulo de validación con preguntas cargadas dinámicamente desde JSON.
 
+---
 
 ## Características Principales
 
-### Menú Principal
-- Barra de navegación inferior con 2 opciones: Inicio y Buscar.
+### 🏠 Página de Inicio
+La pantalla principal incluye:
+- Mensaje de bienvenida.
+- Hero banner informativo.
+- Selector de pestañas:
+  - **Ramos**
+  - **Profesores**
+- Accesos directos a:
+  - Explorar por semestres  
+  - Mis ramos favoritos  
+  - Listado de profesores  
+  - Profesores favoritos  
+- Miniatura de la **malla curricular**, con vista ampliada mediante zoom.
 
-### Página de Inicio
-- Mensaje principal: "Bienvenido a EduProf".
+---
 
-- Dos accesos directos en forma de tarjetas:
+## Semestres y Ramos
+- Grid con los **9 semestres** de la carrera.
+- Cada semestre muestra su lista de ramos.
+- Cada ramo contiene:
+  - Nombre  
+  - Descripción  
+  - Créditos  
+  - Requisitos  
+  - Modalidad  
+  - Nivel de dificultad  
+  - Carga de trabajo semanal  
+  - Evaluación del ramo (JSON interno)  
+  - Profesor asociado  
+- Opción de **agregar o quitar de favoritos**, usando SharedPreferences.
 
-      Semestres → lista de semestres disponibles.
+---
 
-      -Profesores → catálogo de docentes con sus detalles.
+## Profesores
+Cada profesor contiene:
+- Imagen o iniciales  
+- Nombre completo  
+- Horario de atención  
+- Ubicación de oficina  
+- Correo institucional  
+- Años de experiencia 
+- Lista de ramos que imparte 
+- Sección de comentarios simulados 
+- Botón de favoritos con persistencia local  
 
-- Imagen de la malla curricular con opción de ampliarla en pantalla completa.
+---
 
-### Semestres
-- Grid con los 9 semestres de la carrera.
+## Favoritos
+Pantalla con dos pestañas:
+- **Ramos favoritos**  
+- **Profesores favoritos**
 
-- Cada semestre despliega una lista de ramos (asignaturas).
+---
 
-- En cada ramo se muestra:
+## Búsqueda Avanzada
+Pantalla dedicada para buscar:
+- Ramos  
+- Profesores  
+- Modo “Todo”
 
-      -Nombre
+Incluye:
+- Campo de texto  
+- Filtros tipo “chips”  
+- Búsqueda insensible a acentos y mayúsculas  
+- Acceso directo al detalle del elemento seleccionado  
 
-      -Descripción
+---
 
-      -Créditos
+## Preferencias del Usuario
+Desde el menú de configuración, el usuario puede personalizar:
 
-      -Requisitos (si los hay)
+### Color del tema
+- 4 colores disponibles.
 
-      -Profesor asignado (con acceso a su detalle).
+### Tipo de letra
+- Predeterminada  
+- Sans personalizada  
+- Serif personalizada  
+- Rounded personalizada  
 
-### Profesores
-- Listado organizado por ramos.
-
-- Cada profesor muestra:
-
-      -Foto (o iniciales en un ícono si no hay imagen).
-
-      -Nombre
-
-      -Horario de atención
-
-      -Ubicación de oficina
-
-      -Bibliografía / correo de contacto.
-
-### Malla Curricular
-- Vista previa en la página de inicio.
-
-- Opción de abrirla a pantalla completa con zoom y desplazamiento.
-
-
-## Pila de la aplicación 
-**Client:** Flutter y Android.
-
-## Video de presentación
-https://youtu.be/3h7XuvXUp2Q
+### Tamaño del texto
+- Normal  
+- Grande  
 
 
+---
 
-## Diagrama de flujo – Caso de uso principal de EduProf
+## Validación de Usuarios (Encuesta)
+En la pantalla **Acerca de EduProf** existe el botón:
 
- **Fuente de Datos:** archivo academico.dart que centraliza la información de ramos y profesores, utilizando las estructuras definidas en profesor.dart y ramo.dart para su organización (Para que se entienda mejor a donde esta la base de datos)
+### “Calificar la app”
+
+Este abre la pantalla de validación, que contiene:
+- Campo de texto obligatorio: **nombre del usuario**
+- Preguntas cargadas dinámicamente desde:
+
+- Sistema de calificación de 1 a 5 estrellas por pregunta  
+- Botón para **Enviar respuestas**
+
+Al enviar:
+- Se valida que el nombre no esté vacío  
+- Se genera un resumen con todas las respuestas  
+- Se abre el cliente de correo del dispositivo con mensaje prellenado dirigido a: bcorrea23@alumnos.utalca.cl
+
+---
+
+# Diagrama de flujo – Caso de uso principal de EduProf
 
 ```mermaid
 flowchart TD
@@ -98,7 +143,7 @@ flowchart TD
   B5 -- Profesor --> ProfesorDetalle
 
   %% --- Detalle de Ramo ---
-  RamoDetalle[RamoDetalle: info del ramo y profesor]
+  RamoDetalle[RamoDetalle: información del ramo y profesor]
   RamoDetalle --> FR{¿Marcar como favorito?}
   FR -- Sí --> FSaveR[Guardar en favoritos]
   FR -- No --> FP1[Seguir navegando]
@@ -113,7 +158,7 @@ flowchart TD
   FP -- Sí --> FSaveP[Guardar en favoritos]
   FP -- No --> EndFlow
 
-  %% --- Favoritos (flujo alternativo) ---
+  %% --- Favoritos ---
   D --> FAV1[Usuario entra a Favoritos]
   FAV1 --> FAV2[Pestañas Ramos y Profesores]
   FAV2 --> FAV3[Selecciona un favorito]
@@ -130,10 +175,7 @@ flowchart TD
   VAL3 --> VAL4[La app genera resumen]
   VAL4 --> VAL5[Se abre correo prellenado]
 
-  %% --- Fin del caso de uso ---
+  %% --- Fin ---
   FP1 --> EndFlow([Fin del caso de uso])
   EndFlow
 
-
-
- 
