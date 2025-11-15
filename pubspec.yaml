@@ -10,10 +10,14 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Paquetes
   characters: ^1.3.0
   cupertino_icons: ^1.0.8
   collection: ^1.18.0
+  shared_preferences: ^2.2.3
+  url_launcher: ^6.3.0
+  share_plus: ^10.0.0
+  path_provider: ^2.1.0
+  pdf: ^3.10.8
 
 dev_dependencies:
   flutter_test:
@@ -22,6 +26,21 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: EduSans
+      fonts:
+        - asset: assets/fonts/Letra_1.ttf
+
+    - family: EduSerif
+      fonts:
+        - asset: assets/fonts/Letra_2.ttf
+
+    - family: EduRounded
+      fonts:
+        - asset: assets/fonts/Letra_3.ttf
+
+  
 
   assets:
     - assets/Aji.png
@@ -33,3 +52,14 @@ flutter:
     - assets/Semestre.png
     - assets/Profesor.jpg
     - assets/Malla.png
+    - assets/Semestre_2.0.png
+    - assets/Profesor_2.0.png
+    - assets/Profesor_3.0.png
+    - assets/andres_valdivia.jpg
+    - assets/daniela_morales.png
+    - assets/felipe.png
+    - assets/patricia_navarro.png
+    - assets/sergio_guzman.png
+    - assets/laura_medina.png
+    - assets/rodrigo_herrera.png
+    - assets/validacion.json

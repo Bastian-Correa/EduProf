@@ -1,12 +1,15 @@
+import 'package:flutter/material.dart';
+
 class Profesor {
   final String id;
   final String nombre;
-  final String?
-  fotoAsset; // null = sin foto (por si acaso si se me olvida algo)
+  final String? fotoAsset;
 
   final String? horario;
   final String? ubicacion;
   final String? bioCorreo;
+
+  final IconData? rolIcon;
 
   const Profesor({
     required this.id,
@@ -15,5 +18,6 @@ class Profesor {
     this.horario,
     this.ubicacion,
     this.bioCorreo,
+    this.rolIcon,
   });
 }

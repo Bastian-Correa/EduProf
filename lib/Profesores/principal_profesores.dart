@@ -9,93 +9,59 @@ class PrincipalProfesores extends StatelessWidget {
   const PrincipalProfesores({super.key});
 
   static const fondo = Color(0xFFF0F4FF);
-  static const appbarColor = Color.fromARGB(255, 163, 31, 31);
 
-  //Lista de Profesores (sin duplicados por id)
-  Map<String, List<Profesor>> _buildProfesPorRamo() {
-    final map = <String, List<Profesor>>{};
-    ramosPorSemestre.values.expand((l) => l).forEach((ramo) {
+  /// Agrupa por profesor y acumula los ramos que imparte
+  List<_ProfesorConRamos> _buildProfesConRamos() {
+    final map = <String, _ProfesorConRamos>{};
+
+    for (final ramo in ramosPorSemestre.values.expand((l) => l)) {
       final prof = ramo.profesorAsignado;
-      if (prof == null) return;
-      final list = map.putIfAbsent(ramo.nombre, () => []);
-      if (list.none((p) => p.id == prof.id)) list.add(prof);
-    });
-    return map;
+      if (prof == null) continue;
+
+      final id = prof.id;
+      final existente = map[id];
+      if (existente == null) {
+        map[id] = _ProfesorConRamos(profesor: prof, ramos: [ramo.nombre]);
+      } else {
+        if (existente.ramos.none((r) => r == ramo.nombre)) {
+          existente.ramos.add(ramo.nombre);
+        }
+      }
+    }
+
+    final lista = map.values.toList();
+    // Ordenamos por nombre de profesor para que se vea ordenado
+    lista.sort((a, b) => a.profesor.nombre.compareTo(b.profesor.nombre));
+    return lista;
   }
 
   @override
   Widget build(BuildContext context) {
-    final data = _buildProfesPorRamo();
-    final entries = data.entries.toList();
+    final profes = _buildProfesConRamos();
 
     return Scaffold(
       backgroundColor: fondo,
       appBar: AppBar(
-        backgroundColor: appbarColor,
         title: const Text(
           'Profesores',
-          style: TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
         ),
       ),
       body: ListView.separated(
-        padding: const EdgeInsets.all(16),
-        separatorBuilder: (_, __) => const SizedBox(height: 20),
-        itemCount: entries.length,
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+        itemCount: profes.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
-          final ramo = entries[index].key;
-          final lista = entries[index].value;
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.black12),
-                ),
-                child: Text(
-                  ramo,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                  ),
-                ),
+          final item = profes[index];
+          return _ProfesorRowCard(
+            profesor: item.profesor,
+            ramos: item.ramos,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ProfesorDetalle(profesor: item.profesor),
               ),
-              const SizedBox(height: 12),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: lista.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.72,
-                ),
-                itemBuilder: (context, i) {
-                  final p = lista[i];
-                  return _ProfesorCard(
-                    profesor: p,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ProfesorDetalle(profesor: p),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
+            ),
           );
         },
       ),
@@ -104,49 +70,126 @@ class PrincipalProfesores extends StatelessWidget {
   }
 }
 
-class _ProfesorCard extends StatelessWidget {
+class _ProfesorConRamos {
   final Profesor profesor;
+  final List<String> ramos;
+
+  _ProfesorConRamos({required this.profesor, required this.ramos});
+}
+
+/// Tarjeta horizontal de profesor
+class _ProfesorRowCard extends StatelessWidget {
+  final Profesor profesor;
+  final List<String> ramos;
   final VoidCallback onTap;
-  const _ProfesorCard({required this.profesor, required this.onTap});
+
+  const _ProfesorRowCard({
+    required this.profesor,
+    required this.ramos,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     final foto = profesor.fotoAsset ?? '';
-    return Card(
+    final seed = Theme.of(context).colorScheme.primary;
+
+    String ramoText;
+    if (ramos.isEmpty) {
+      ramoText = 'Sin ramo asignado';
+    } else if (ramos.length == 1) {
+      ramoText = ramos.first;
+    } else {
+      ramoText = '${ramos.first} · +${ramos.length - 1} ramos más';
+    }
+
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
       elevation: 2,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shadowColor: Colors.black12,
       child: InkWell(
+        borderRadius: BorderRadius.circular(16),
         onTap: onTap,
-        child: Column(
-          children: [
-            Expanded(
-              child: AspectRatio(
-                aspectRatio: 3 / 4,
-                child: foto.isNotEmpty
-                    ? Image.asset(
-                        foto,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) =>
-                            _PlaceholderFoto(nombre: profesor.nombre),
-                      )
-                    : _PlaceholderFoto(nombre: profesor.nombre),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: Text(
-                profesor.nombre,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+          child: Row(
+            children: [
+              // foto
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: SizedBox(
+                  width: 70,
+                  height: 70,
+                  child: foto.isNotEmpty
+                      ? Image.asset(
+                          foto,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) =>
+                              _PlaceholderFoto(nombre: profesor.nombre),
+                        )
+                      : _PlaceholderFoto(nombre: profesor.nombre),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: 12),
+
+              // info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      profesor.nombre,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      ramoText,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.schedule_rounded,
+                          size: 14,
+                          color: seed.withOpacity(.8),
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            profesor.horario ?? 'Horario no definido',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              // indicación de detalle
+              const Icon(Icons.chevron_right_rounded, color: Colors.black38),
+            ],
+          ),
         ),
       ),
     );
@@ -171,13 +214,13 @@ class _PlaceholderFoto extends StatelessWidget {
       color: const Color(0xFFF1F2F6),
       child: Center(
         child: CircleAvatar(
-          radius: 34,
-          backgroundColor: const Color(0xFF5E60CE),
+          radius: 26,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           child: Text(
             iniciales(),
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 22,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),

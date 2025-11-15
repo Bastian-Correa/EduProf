@@ -7,23 +7,22 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:EduProf/Home/main.dart';
+import 'package:EduProf/Config/user_prefs.dart'; // Importa ThemeController
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    final themeCtrl = ThemeController();
 
-    // Verify that our counter starts at 0.
+    await tester.pumpWidget(MyApp(themeCtrl: themeCtrl));
+
+    // ...resto del test...
     expect(find.text('0'), findsOneWidget);
     expect(find.text('1'), findsNothing);
 
-    // Tap the '+' icon and trigger a frame.
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });

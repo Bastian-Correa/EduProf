@@ -14,7 +14,6 @@ class SemestreDetalle extends StatelessWidget {
   });
 
   static const fondo = Color(0xFFF0F4FF);
-  static const appbarColor = Color.fromARGB(255, 163, 31, 31);
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +21,7 @@ class SemestreDetalle extends StatelessWidget {
       backgroundColor: fondo,
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        backgroundColor: appbarColor,
-        title: Text(
-          'Semestre $semestre',
-          style: const TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
+        title: Text('Semestre $semestre'),
       ),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),

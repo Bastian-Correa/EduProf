@@ -1,23 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:EduProf/Home/main.dart';
-import 'package:EduProf/botones_barra/paginas_b_f.dart';
+import 'package:EduProf/Botones_Barra/search_screen.dart';
+import 'package:EduProf/Botones_Barra/favoritos_screen.dart';
+import 'package:EduProf/Home/home.dart';
 
 class AppBottomNav extends StatelessWidget {
-  /// 0 = Inicio, 1 = Buscar, 2 = Favoritos
   final int currentIndex;
   const AppBottomNav({super.key, required this.currentIndex});
 
   void _goHome(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const MyHomePage(title: 'EduProf')),
-      (r) => false,
-    );
+    final myApp = context.findAncestorWidgetOfExactType<MyApp>();
+    final themeCtrl = myApp?.themeCtrl;
+
+    if (themeCtrl != null) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => MyHomePage(title: 'EduProf', themeCtrl: themeCtrl),
+        ),
+        (r) => false,
+      );
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const Placeholder()),
+        (r) => false,
+      );
+    }
   }
 
   void _goSearch(BuildContext context) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (_) => const SearchPlaceholderScreen()));
+    ).push(MaterialPageRoute(builder: (_) => const SearchScreen()));
+  }
+
+  void _goFavoritos(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const FavoritosScreen(initialTab: FavoritosTab.ramos),
+      ),
+    );
   }
 
   @override
@@ -37,6 +58,9 @@ class AppBottomNav extends StatelessWidget {
           case 1:
             _goSearch(context);
             break;
+          case 2:
+            _goFavoritos(context);
+            break;
         }
       },
       items: const [
@@ -47,6 +71,10 @@ class AppBottomNav extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.search_rounded),
           label: 'Buscar',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.star_rounded),
+          label: 'Favoritos',
         ),
       ],
     );
