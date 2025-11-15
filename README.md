@@ -114,6 +114,9 @@ Al enviar:
 
 ---
 
+### Link de video
+- https://www.youtube.com/watch?v=PUairQuJFOk
+
 # Diagrama de flujo – Caso de uso principal de EduProf
 
 ```mermaid
